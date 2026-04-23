@@ -1,0 +1,11 @@
+prefix: '&#b02a48~&#b22a46~&#b32a44D&#b52942o&#b62940z&#b8293ea&#b9293cC&#bb293ao&#bd2938u&#be2835n&#c02833t&#c12831r&#c3282fi&#c4282de&#c6272bs&#c72729~&#c92727~' #~~DozaCountries~~
+OfflinePlayer: "{prefix} &cОшибка: Игрок {player} должен быть в сети!"
+Permission: "{prefix} &cОшибка: У вас недостаточно прав на использование этого!"
+UsingCommand: "{prefix} &cИспользование: /country <create|add|setflag> ..."
+UnknownArg: "{prefix} &cНеизвестная подкоманда."
+SuccessAddPlayer: "{prefix} &fВы успешно добавили игрока {player} в страну {country}!"
+SuccessCreateCountry: "{prefix} &fСтрана &c{country}&f успешно создана!"
+FlagInMainHand: "{prefix} &cОшибка: Вы должны держать флаг в основной руке!"
+SetFlag: "{prefix} &aНовый флаг для страны &f{country} &aуспешно установлен!"
+BusyChunk: "{prefix} &cЭтот чанк уже занят вашей страной!"
+BreakFlag: "{prefix} &aФлаг сломан: территория чанка теперь свободна."
