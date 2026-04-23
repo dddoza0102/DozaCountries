@@ -5,7 +5,8 @@ import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.protection.flags.RegionGroup;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import dev.doza.dozacountres.Dozacountres;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -20,7 +21,6 @@ import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import org.bukkit.World;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -31,7 +31,7 @@ public class CountryUtil {
         List<String> PopulationNames = Dozacountres.getPlugin(Dozacountres.class).getConfig().getStringList("countries."+nameCountry+".PopulationNames");
         PopulationNames.add(player.getName());
         Dozacountres.getPlugin(Dozacountres.class).getConfig().set("players",PopulationNames);
-        playerd.sendMessage(ChatColor.GREEN + "Вы успешно добавили игрока "+playername+" в страну "+nameCountry);
+        playerd.sendMessage(messagePlayerCountry("SuccessAddPlayer",playername,nameCountry));
     }
     private final Dozacountres plugin = Dozacountres.getPlugin(Dozacountres.class);
 
@@ -54,14 +54,14 @@ public class CountryUtil {
         }
 
         Dozacountres.getPlugin(Dozacountres.class).saveConfig();
-        creator.sendMessage("§aСтрана " + countryName + " успешно создана!");
+        creator.sendMessage(messagePlayerCountry("SuccessCreateCountry", creator.getName(), countryName));
     }
 
     public void SetFlag(String countryName, Player player) {
         ItemStack item = player.getInventory().getItemInMainHand();
 
         if (!(item.getItemMeta() instanceof BannerMeta meta)) {
-            player.sendMessage("§cОшибка: Вы должны держать флаг в основной руке!");
+            player.sendMessage(message("FlagInMainHand"));
             return;
         }
 
@@ -77,7 +77,7 @@ public class CountryUtil {
 
         Dozacountres.getPlugin(Dozacountres.class).saveConfig();
 
-        player.sendMessage("§aНовый флаг для страны §f" + countryName + " §aуспешно установлен!");
+        player.sendMessage(messagePlayerCountry("SetFlag", "", countryName));
     }
 
     public void saveBannerToConfig(BannerMeta meta, String path, FileConfiguration config) {
@@ -95,7 +95,7 @@ public class CountryUtil {
         if (regions == null) return;
 
         if (regions.hasRegion(id)) {
-            player.sendMessage("§cЭтот чанк уже занят вашей страной!");
+            player.sendMessage(message("BusyChunk"));
             return;
         }
 
@@ -103,7 +103,6 @@ public class CountryUtil {
         BlockVector3 max = BlockVector3.at(x2, y2, z2);
         ProtectedCuboidRegion region = new ProtectedCuboidRegion(id, min, max);
 
-        // Берем данные страны из конфига
         String playercountry = Dozacountres.getPlugin(Dozacountres.class).getConfig().getString("players." + player.getName());
         List<String> players = Dozacountres.getPlugin(Dozacountres.class).getConfig().getStringList("countries."+playercountry+".PopulationNames");
         List<UUID> uuids = new ArrayList<>();
@@ -188,10 +187,37 @@ public class CountryUtil {
             regions.removeRegion(id);
             try {
                 regions.save();
-                player.sendMessage("§aФлаг сломан: территория чанка теперь свободна.");
+                player.sendMessage(message("BreakFlag"));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
+    public String translate(String input) {
+        if (input == null || input.isEmpty()) return "";
+
+        var component = MiniMessage.miniMessage().deserialize(input);
+
+        return LegacyComponentSerializer.legacySection().serialize(component);
+    }
+    public String message(String path){
+        String stra = Dozacountres.getPlugin(Dozacountres.class).getMessagesConfig().getString(path);
+        stra.replace("{prefix}", translate(Dozacountres.getPlugin(Dozacountres.class).getMessagesConfig().getString("prefix")));
+        return org.bukkit.ChatColor.translateAlternateColorCodes('&', stra);
+    }
+    public String messagePlayer(String path, String player){
+        String stra = Dozacountres.getPlugin(Dozacountres.class).getMessagesConfig().getString(path);
+        stra.replace("{prefix}", translate(Dozacountres.getPlugin(Dozacountres.class).getMessagesConfig().getString("prefix")));
+        stra.replace("{player}", player);
+        return org.bukkit.ChatColor.translateAlternateColorCodes('&', stra);
+    }
+    public String messagePlayerCountry(String path, String player, String country){
+        String stra = Dozacountres.getPlugin(Dozacountres.class).getMessagesConfig().getString(path);
+        stra.replace("{prefix}", translate(Dozacountres.getPlugin(Dozacountres.class).getMessagesConfig().getString("prefix")));
+        stra.replace("{player}", player);
+        stra.replace("{country}", player);
+        return org.bukkit.ChatColor.translateAlternateColorCodes('&', stra);
+    }
+
 }
+
