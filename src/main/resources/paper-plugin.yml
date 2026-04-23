@@ -10,3 +10,7 @@ dependencies:
     WorldGuard:
       load: BEFORE
       required: true
+permissions:
+  dozacountries.command:
+    description: право на использование команды плагина
+    default: op
