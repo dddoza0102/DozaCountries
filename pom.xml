@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>dev.doza</groupId>
-    <artifactId>DozaCountres</artifactId>
-    <version>1.0.0</version>
+    <artifactId>DozaCountries</artifactId>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
 
-    <name>dozacountres</name>
+    <name>DozaCountries</name>
 
     <properties>
         <java.version>21</java.version>
