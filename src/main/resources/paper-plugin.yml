@@ -1,0 +1,12 @@
+name: dozacountres
+version: '1.0.0'
+main: dev.doza.dozacountres.Dozacountres
+api-version: '1.21'
+commands:
+  country:
+    usage: /<command> <arg>
+dependencies:
+  server:
+    WorldGuard:
+      load: BEFORE
+      required: true
